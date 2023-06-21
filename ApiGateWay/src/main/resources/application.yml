@@ -1,0 +1,34 @@
+
+server:
+  port: 8012
+
+spring:
+  application:
+    name: apiGateway
+  cloud:
+    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#          lower-case-service-id: true
+      routes:
+        - id: users-status-check
+          uri: lb://users-ms
+          predicates:
+            - Path=/users-ms/users/check
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ms/users/check,/users/check
+        - id: users-ws-h2-console
+          uri: lb://users-ms
+          predicates:
+            - Path=/users-ms/h2-console
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ms/(?<segment>.*), /$\{segment}
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka

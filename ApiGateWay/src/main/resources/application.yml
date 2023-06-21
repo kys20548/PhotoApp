@@ -17,9 +17,11 @@ spring:
           predicates:
             - Path=/users-ms/users/check
             - Method=GET
+            - Header=Authorization, Bearer (.*)
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/users-ms/users/check,/users/check
+            - AuthorizationHeaderFilter
         - id: users-ws-h2-console
           uri: lb://users-ms
           predicates:
@@ -48,3 +50,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8010/eureka
+
+token:
+  secret: dgjorufhrsnjdu438fkdj38fdmcv7dm3ckvhrsnjjuwelueivhe848fhedldh5ndk

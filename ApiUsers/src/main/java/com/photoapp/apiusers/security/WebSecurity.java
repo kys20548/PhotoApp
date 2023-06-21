@@ -55,8 +55,12 @@ public class WebSecurity {
 
 		http.csrf().disable();
 
+
+
 		http.authorizeHttpRequests()
 				.requestMatchers(HttpMethod.POST, "/users").access(
+						new WebExpressionAuthorizationManager("hasIpAddress('"+gatewayIp+"')"))
+				.requestMatchers(HttpMethod.GET, "/users/check").access(
 						new WebExpressionAuthorizationManager("hasIpAddress('"+gatewayIp+"')"))
 				.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
 				.and()

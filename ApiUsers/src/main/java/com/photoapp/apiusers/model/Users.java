@@ -31,4 +31,7 @@ public class Users {
 
   @Column(nullable=false)
   private String password;
+
+  // @Column(nullable = false)
+  // private LocalDateTime createTime;
 }

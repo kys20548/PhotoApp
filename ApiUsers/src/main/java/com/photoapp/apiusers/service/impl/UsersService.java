@@ -4,7 +4,11 @@ import com.photoapp.apiusers.dto.UserDTO;
 import com.photoapp.apiusers.model.Users;
 import com.photoapp.apiusers.repository.UserRepository;
 import com.photoapp.apiusers.service.UsersServices;
+import java.util.ArrayList;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +35,20 @@ public class UsersService implements UsersServices {
     model.setPassword(encoder.encode(userDTO.getPassword()));
 
     return repository.save(model);
+  }
+
+  @Override
+  public Users getUserByEmail(String email) {
+    return repository.findByEmail(email);
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Users userEntity = this.getUserByEmail(username);
+
+    if(userEntity == null) throw new UsernameNotFoundException(username);
+
+    return new User(userEntity.getEmail(),userEntity.getPassword(),
+        true, true, true, true, new ArrayList<>());
   }
 }

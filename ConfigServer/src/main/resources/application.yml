@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: PhotoAppConfigServer
+  cloud:
+    config:
+      server:
+        git:
+          uri: git@github.com:kys20548/PhotoAppConfigServer.git
+          ignore-local-ssh-settings: true
+          search-paths: PhotoAppConfigServer
+          default-label: main
+          private-key: |
+            -----BEGIN OPENSSH PRIVATE KEY-----
+            -----END OPENSSH PRIVATE KEY-----
+
+server:
+  port: 8011
+
+
+

@@ -13,17 +13,11 @@ import java.util.Set;
 
 @Component
 @Slf4j
-public class MyPreFilter implements GlobalFilter {
+public class MyProFilter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("My first prefilter is executed.........");
-        String path = exchange.getRequest().getPath().value();
-        log.info(path);
-        HttpHeaders headers =  exchange.getRequest().getHeaders();
-        Set<String> entries = exchange.getRequest().getHeaders().keySet();
-        entries.forEach(x->{
-            log.info(x+" "+headers.getFirst(x));
-        });
-        return chain.filter(exchange);
+        return chain.filter(exchange).then(Mono.fromRunnable(()->{
+            log.info("My proFilter executed.......");
+        }));
     }
 }

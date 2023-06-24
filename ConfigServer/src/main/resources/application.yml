@@ -13,8 +13,17 @@ spring:
             -----BEGIN OPENSSH PRIVATE KEY-----
             -----END OPENSSH PRIVATE KEY-----
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 server:
   port: 8011
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh
 

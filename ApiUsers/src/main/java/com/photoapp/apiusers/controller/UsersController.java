@@ -27,7 +27,7 @@ public class UsersController {
 
   @GetMapping("/check")
   public String check(){
-    return "Service alive,port number : "+env.getProperty("local.server.port");
+    return "Service alive,port number : "+env.getProperty("local.server.port")+", with secret token :"+env.getProperty("token.secret");
   }
 
   @PostMapping

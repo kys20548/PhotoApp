@@ -46,6 +46,11 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/users-ms/(?<segment>.*), /$\{segment}
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 eureka:
   client:
     service-url:

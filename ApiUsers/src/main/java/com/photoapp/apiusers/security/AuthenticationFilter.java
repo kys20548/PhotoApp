@@ -17,6 +17,8 @@ import java.util.Base64;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,14 +29,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private  UsersService usersService;
-	private  String token;
-	private  String tokenExpireTime;
-	public AuthenticationFilter(UsersService usersService,
-			String token,String tokenExpireTime, AuthenticationManager authenticationManager) {
+	private  Environment environment;
+	public AuthenticationFilter(UsersService usersService, AuthenticationManager authenticationManager,Environment environment) {
 		super(authenticationManager);
 		this.usersService = usersService;
-		this.token = token;
-		this.tokenExpireTime = tokenExpireTime;
+		this.environment = environment;
 	}
 
 	@Override
@@ -60,15 +59,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 		String userName = ((User) auth.getPrincipal()).getUsername();
 		Users userDetails = usersService.getUserByEmail(userName);
-		// String tokenSecret = environment.getProperty("token.secret");
-		byte[] secretKeyBytes = Base64.getEncoder().encode(token.getBytes());
+		byte[] secretKeyBytes = Base64.getEncoder().encode(environment.getProperty("token.secret").getBytes());
 		SecretKey secretKey = new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS512.getJcaName());
 
 		Instant now = Instant.now();
-
 		String token = Jwts.builder().setSubject(userDetails.getId()+"")
 				.setExpiration(
-						Date.from(now.plusMillis(Long.parseLong(tokenExpireTime))))
+						Date.from(now.plusMillis(Long.parseLong(environment.getProperty("token.expiration_time")))))
 				.setIssuedAt(Date.from(now)).signWith(secretKey, SignatureAlgorithm.HS512).compact();
 		//
 		res.addHeader("token", token);

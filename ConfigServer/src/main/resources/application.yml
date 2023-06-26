@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: native,git
   application:
     name: PhotoAppConfigServer
   cloud:
@@ -12,12 +14,14 @@ spring:
           private-key: |
             -----BEGIN OPENSSH PRIVATE KEY-----
             -----END OPENSSH PRIVATE KEY-----
-
+        native:
+          search-locations: file://${user.home}/Desktop/dev/
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
+
 server:
   port: 8011
 
@@ -26,4 +30,3 @@ management:
     web:
       exposure:
         include: busrefresh
-

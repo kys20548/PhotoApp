@@ -1,7 +1,6 @@
 package com.photoapp.apiusers.security;
 
 import com.photoapp.apiusers.service.impl.UsersService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -51,20 +50,18 @@ public class WebSecurity {
 
 		http.csrf().disable();
 
-
-
 		http.authorizeHttpRequests()
 				.requestMatchers(HttpMethod.POST, "/users").access(
 						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
 				.requestMatchers(HttpMethod.GET, "/users/check").access(
 						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
 				.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+				.requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
 				.and()
 				.addFilter(authenticationFilter)
 				.authenticationManager(authenticationManager)
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		;
-		
+
 		http.headers().frameOptions().disable();
 		
 		return http.build();

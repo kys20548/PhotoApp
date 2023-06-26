@@ -46,6 +46,15 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/users-ms/(?<segment>.*), /$\{segment}
+        - id: users-ms-actuator
+          uri: lb://users-ms
+          predicates:
+            - Path=/users-ms/actuator/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ms/(?<segment>.*), /$\{segment}
+
   rabbitmq:
     host: localhost
     port: 5672
@@ -58,3 +67,14 @@ eureka:
 
 token:
   secret: dgjorufhrsnjdu438fkdj38fdmcv7dm3ckvhrsnjjuwelueivhe848fhedldh5ndk
+
+# for spring actuator
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,gateway,mappings
+

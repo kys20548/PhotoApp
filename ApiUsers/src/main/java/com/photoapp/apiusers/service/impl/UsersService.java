@@ -1,11 +1,15 @@
 package com.photoapp.apiusers.service.impl;
 
 import com.photoapp.apiusers.dto.UserDTO;
+import com.photoapp.apiusers.model.Albums;
 import com.photoapp.apiusers.model.Users;
 import com.photoapp.apiusers.repository.UserRepository;
+import com.photoapp.apiusers.service.AlbumsServiceClient;
 import com.photoapp.apiusers.service.UsersServices;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,10 +25,14 @@ public class UsersService implements UsersServices {
   final
   BCryptPasswordEncoder encoder;
 
+  final
+  AlbumsServiceClient albumsServiceClient;
+
   public UsersService(UserRepository repository,
-      BCryptPasswordEncoder encoder) {
+      BCryptPasswordEncoder encoder, AlbumsServiceClient albumsServiceClient) {
     this.repository = repository;
     this.encoder = encoder;
+    this.albumsServiceClient = albumsServiceClient;
   }
 
   @Override
@@ -40,6 +48,14 @@ public class UsersService implements UsersServices {
   @Override
   public Users getUserByEmail(String email) {
     return repository.findByEmail(email);
+  }
+
+  @Override
+  public Users getUserById(Long id) {
+    List<Albums> albumsList = albumsServiceClient.getAlbums(id);
+    Users user = repository.findById(id).get();
+    user.setListAlbums(albumsList);
+    return repository.findById(id).get();
   }
 
   @Override

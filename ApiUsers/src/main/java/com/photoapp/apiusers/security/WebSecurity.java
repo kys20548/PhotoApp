@@ -1,6 +1,7 @@
 package com.photoapp.apiusers.security;
 
 import com.photoapp.apiusers.service.impl.UsersService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -11,7 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -53,10 +56,16 @@ public class WebSecurity {
 		http.authorizeHttpRequests()
 				.requestMatchers(HttpMethod.POST, "/users").access(
 						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
+				.requestMatchers(HttpMethod.GET, "/users/**").access(
+						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
 				.requestMatchers(HttpMethod.GET, "/users/check").access(
 						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
 				.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
+				// .and()
+				// .exceptionHandling()
+				// .authenticationEntryPoint(authenticationEntryPoint())
+				// .accessDeniedHandler(accessDeniedHandler())
 				.and()
 				.addFilter(authenticationFilter)
 				.authenticationManager(authenticationManager)
@@ -66,6 +75,19 @@ public class WebSecurity {
 		
 		return http.build();
 		
+	}
+
+
+	private AuthenticationEntryPoint authenticationEntryPoint() {
+		return (request, response, authException) -> {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
+		};
+	}
+
+	private AccessDeniedHandler accessDeniedHandler() {
+		return (request, response, accessDeniedException) -> {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
+		};
 	}
 
 }

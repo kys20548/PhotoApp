@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -26,12 +28,9 @@ public class Users {
   @Column(nullable=false, length=120, unique=true)
   private String email;
 
-  // @Column(nullable=false, unique=true)
-  // private String userId;
-
   @Column(nullable=false)
   private String password;
 
-  // @Column(nullable = false)
-  // private LocalDateTime createTime;
+  @Transient
+  private List<Albums> listAlbums;
 }

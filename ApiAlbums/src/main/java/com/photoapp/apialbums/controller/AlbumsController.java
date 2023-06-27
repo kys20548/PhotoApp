@@ -27,7 +27,7 @@ public class AlbumsController {
     }
 
     @GetMapping("/{id}/albums")
-    public List<Albums> userAlbums(@PathVariable String id) {
+    public List<Albums> userAlbums(@PathVariable Long id) {
         log.info("get userAlbums ...... ");
         return albumsService.getAlbums(id);
     }

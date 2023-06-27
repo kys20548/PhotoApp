@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,12 @@ public class UsersController {
   @PostMapping
   public ResponseEntity<Users> createUser(@Valid @RequestBody UserDTO user){
     return ResponseEntity.status(HttpStatus.OK).body(services.createUser(user));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Users> getUser(@PathVariable Long id){
+
+    return ResponseEntity.status(HttpStatus.OK).body(services.getUserById(id));
   }
 
 }

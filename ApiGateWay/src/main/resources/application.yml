@@ -54,6 +54,16 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/users-ms/(?<segment>.*), /$\{segment}
+        - id: users-ws-get-update-delete
+          uri: lb://users-ms
+          predicates:
+            - Path=/users-ms/users/**
+            - Method=GET,PUT,DELETE
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ms/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
   rabbitmq:
     host: localhost

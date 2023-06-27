@@ -10,5 +10,5 @@ import com.photoapp.apialbums.model.Albums;
 import java.util.List;
 
 public interface AlbumsService {
-    List<Albums> getAlbums(String userId);
+    List<Albums> getAlbums(Long userId);
 }

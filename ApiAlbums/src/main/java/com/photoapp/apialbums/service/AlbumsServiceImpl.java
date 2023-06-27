@@ -14,21 +14,21 @@ import org.springframework.stereotype.Service;
 public class AlbumsServiceImpl implements AlbumsService {
 
     @Override
-    public List<Albums> getAlbums(String userId) {
+    public List<Albums> getAlbums(Long id) {
         List<Albums> returnValue = new ArrayList<>();
 
         Albums albumEntity = new Albums();
-        albumEntity.setUserId(userId);
+        // albumEntity.setUserId(id);
         albumEntity.setAlbumId("album1Id");
         albumEntity.setDescription("album 1 description");
-        albumEntity.setId(1L);
+        albumEntity.setId(id);
         albumEntity.setName("album 1 name");
 
         Albums albumEntity2 = new Albums();
-        albumEntity2.setUserId(userId);
+        // albumEntity2.setUserId(userId);
         albumEntity2.setAlbumId("album2Id");
         albumEntity2.setDescription("album 2 description");
-        albumEntity2.setId(2L);
+        albumEntity2.setId(id);
         albumEntity2.setName("album 2 name");
         
         returnValue.add(albumEntity);

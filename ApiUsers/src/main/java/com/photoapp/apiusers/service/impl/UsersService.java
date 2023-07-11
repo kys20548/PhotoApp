@@ -8,6 +8,7 @@ import com.photoapp.apiusers.service.AlbumsServiceClient;
 import com.photoapp.apiusers.service.UsersServices;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 public class UsersService implements UsersServices {
 
   final
@@ -52,7 +54,9 @@ public class UsersService implements UsersServices {
 
   @Override
   public Users getUserById(Long id) {
+    log.debug("Before calling albums Microservice");
     List<Albums> albumsList = albumsServiceClient.getAlbums(id);
+    log.debug("After calling albums Microservice");
     Users user = repository.findById(id).get();
     user.setListAlbums(albumsList);
     return repository.findById(id).get();

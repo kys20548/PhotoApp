@@ -54,18 +54,9 @@ public class WebSecurity {
 		http.csrf().disable();
 
 		http.authorizeHttpRequests()
-				.requestMatchers(HttpMethod.POST, "/users").access(
-						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
-				.requestMatchers(HttpMethod.GET, "/users/**").access(
-						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
-				.requestMatchers(HttpMethod.GET, "/users/check").access(
-						new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
+				.requestMatchers("/users/**").access(new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
 				.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
-				// .and()
-				// .exceptionHandling()
-				// .authenticationEntryPoint(authenticationEntryPoint())
-				// .accessDeniedHandler(accessDeniedHandler())
 				.and()
 				.addFilter(authenticationFilter)
 				.authenticationManager(authenticationManager)
